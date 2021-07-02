@@ -82,7 +82,8 @@ namespace _02_MiniShop
             if (!(status == OrderStatus.NewOrder && qnty >= 0 && product != null))
                 return false;
 
-            int productIndex = GetProductIndex(product);
+            //int productIndex = GetProductIndex(product);
+            int productIndex = items.FindIndex(x => x.ProductName.Equals(product.Name));
             if (productIndex == -1) return false; // nie znaleziono produktu
 
             //zabezpieczenie na okolicznosc podania qnty > niż bieżacy stan dla poz. zamówienia
@@ -102,16 +103,23 @@ namespace _02_MiniShop
         public double CalcTotalAmount()
         {
             double amount = 0.0;
-            foreach (var item in items)
-            {
-                amount += item.Qnty * item.ProductPrice;
-            }
+            //foreach (var item in items) { amount += item.Qnty * item.ProductPrice; }
+            items.ForEach(x => amount += x.Qnty * x.ProductPrice );
             // aplikacja znizki
             if (discount>0 && discount<100)
             {
                 amount *= (100 - discount) / 100.0;
             }
             return amount;
+        }
+
+        public void Print()
+        {
+            Console.WriteLine("Pozycje zamówienia");
+            items.ForEach(e => Console.WriteLine("{0,-40}|{1,10}|{2,10:0.00}|{3,12:0.00}",
+                    e.ProductName, e.Qnty, e.ProductPrice, e.Qnty * e.ProductPrice) );
+
+            Console.WriteLine("Do zapłaty: {0}", CalcTotalAmount() );
         }
     }
 }
