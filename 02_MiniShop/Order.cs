@@ -26,6 +26,7 @@ namespace _02_MiniShop
         private string customerName;
         private string shipAddress;
         private DateTime orderDate;
+        private int discount = 0;
         private OrderStatus status = OrderStatus.NewOrder;
         private List<OrderItem> items = new List<OrderItem>(10); //utworzona pusta lista
 
@@ -62,7 +63,8 @@ namespace _02_MiniShop
                 return false;
 
             //kontynuuj dodawanie
-            int productIndex = GetProductIndex(product);
+            //int productIndex = GetProductIndex(product);
+            int productIndex = items.FindIndex(x => x.ProductName.Equals(product.Name) );
             if (productIndex == -1)
             {
                 items.Add(new OrderItem(product, qnty));
@@ -76,7 +78,40 @@ namespace _02_MiniShop
 
         public bool RemoveProduct(Product product, uint qnty=0)
         {
-            return false;
+            // warunek 
+            if (!(status == OrderStatus.NewOrder && qnty >= 0 && product != null))
+                return false;
+
+            int productIndex = GetProductIndex(product);
+            if (productIndex == -1) return false; // nie znaleziono produktu
+
+            //zabezpieczenie na okolicznosc podania qnty > niż bieżacy stan dla poz. zamówienia
+            if (qnty > items[productIndex].Qnty) return false;
+
+            //usuwanie, gdy qnty rowne 0 lub qnty jest równe bieżacej liczbie produktu w zamówienia
+            if (qnty==0 || qnty==items[productIndex].Qnty)
+            {
+                items.RemoveAt(productIndex);
+                return true;
+            }
+
+            items[productIndex].Qnty -= qnty;
+            return true;
+        }
+    
+        public double CalcTotalAmount()
+        {
+            double amount = 0.0;
+            foreach (var item in items)
+            {
+                amount += item.Qnty * item.ProductPrice;
+            }
+            // aplikacja znizki
+            if (discount>0 && discount<100)
+            {
+                amount *= (100 - discount) / 100.0;
+            }
+            return amount;
         }
     }
 }

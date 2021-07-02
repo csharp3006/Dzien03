@@ -22,9 +22,11 @@ namespace _02_MiniShop
             order.AddProduct(product2, 2);
             order.AddProduct(product1, 2);
             order.AddProduct(product2, 3);
-            
-            
 
+            order.RemoveProduct(product1, 3);
+            order.RemoveProduct(product2);
+            order.RemoveProduct(product3, 5);
+            
             Console.ReadKey();
         }
     }

@@ -19,6 +19,8 @@ namespace _02_MiniShop
             get { return product.Name; }
         }
 
+        public double ProductPrice { get { return product.Price; } }
+
         //wlasciwosc Qnty
         public uint Qnty
         {
