@@ -43,9 +43,35 @@ namespace _02_MiniShop
             return false;
         }
 
+        private int GetProductIndex(Product product)
+        {
+            int result = -1;
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i].ProductName.Equals(product.Name)) {
+                    return i;
+                }
+            }
+            return result;
+        }
+
         public bool AddProduct(Product product, uint qnty)
         {
-            return false;
+            // warunek 
+            if (!(status==OrderStatus.NewOrder && qnty>0 && product!=null))
+                return false;
+
+            //kontynuuj dodawanie
+            int productIndex = GetProductIndex(product);
+            if (productIndex == -1)
+            {
+                items.Add(new OrderItem(product, qnty));
+            } else
+            {
+                items[productIndex].Qnty += qnty;
+            }
+
+            return true;
         }
 
         public bool RemoveProduct(Product product, uint qnty=0)

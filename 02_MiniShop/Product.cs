@@ -28,6 +28,11 @@ namespace _02_MiniShop
             get { return price; }
         }
 
+        public String Name
+        {
+            get { return name; }
+        }
+
         public Product(int id, string name, double price, string descr="")
         {
             this.id = id; this.name = name; this.price = price; this.descr = descr;
